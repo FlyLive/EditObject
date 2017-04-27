@@ -40,7 +40,9 @@ $(document).ready(function () {
 
         return false;
     });
-})
+});
+
+
 
 document.onclick = function () {
     var clickDiv = document.getElementById('click-menu');

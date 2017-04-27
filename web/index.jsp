@@ -49,11 +49,9 @@
     </ul>
 
     <div class="right-click" id="click-menu">
-        <p>编辑角色</p>
+        <p>编辑对象</p>
         <ul>
-            <li id="addItem" onclick="DeletObject()">
-                删除对象
-            </li>
+            <li onclick="DeletObject()">删除对象</li>
             <li onclick="EditObject()">修改对象信息</li>
         </ul>
     </div>

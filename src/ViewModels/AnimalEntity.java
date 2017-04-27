@@ -1,4 +1,4 @@
-package Entities;
+package ViewModels;
 
 import Annotations.Label;
 

@@ -1,4 +1,4 @@
-package Servlets;
+package Service;
 
 import  DataBase.DataBaseDAO;
 import java.lang.reflect.Field;
@@ -129,5 +129,4 @@ public class ObjectEdit {
 			objectDisplay.displayInfo(rs, clazz);
 		}
 	}
-
 }
