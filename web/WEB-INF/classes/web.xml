@@ -2,39 +2,46 @@
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-         id="WebApp_ID" version="3.1">
-    <context-param>
-        <param-name>javax.faces.CONFIG_FILES</param-name>
-        <param-value>/Objects-config.xml,/Back/Service/Objects.xml</param-value>
-    </context-param>
-
+         version="3.1">
     <servlet>
-        <servlet-name>InitObjectListServlet</servlet-name>
-        <servlet-class>Servlets.InitObjectListServlet</servlet-class>
+        <servlet-name>InitMenuServlet</servlet-name>
+        <servlet-class>Servlets.InitMenuServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>CreateObjectServlet</servlet-name>
+        <servlet-class>Servlets.CreateObjectServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeletObjectServlet</servlet-name>
+        <servlet-class>Servlets.DeletObjectServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>EditObjectServlet</servlet-name>
         <servlet-class>Servlets.EditObjectServlet</servlet-class>
     </servlet>
-
-
     <servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
+        <servlet-name>SearchServlet</servlet-name>
+        <servlet-class>Servlets.SearchServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
-        <servlet-name>InitObjectListServlet</servlet-name>
-        <url-pattern>/InitObjectListServlet</url-pattern>
+        <servlet-name>InitMenuServlet</servlet-name>
+        <url-pattern>/Servlets/InitMenuServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateObjectServlet</servlet-name>
+        <url-pattern>/Servlets/CreateObjectServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeletObjectServlet</servlet-name>
+        <url-pattern>/Servlets/DeletObjectServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EditObjectServlet</servlet-name>
-        <url-pattern>/EditObjectServlet</url-pattern>
+        <url-pattern>/Servlets/EditObjectServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.xhtml</url-pattern>
+        <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/Servlets/SearchServlet</url-pattern>
     </servlet-mapping>
 </web-app>

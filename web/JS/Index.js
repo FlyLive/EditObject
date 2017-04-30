@@ -46,8 +46,7 @@ $(document).ready(function () {
 function InitialObjectColumns(){
     $.ajax({
         type:'get',
-        url:'InitObjectListServlet',
-        dataType:'json',
+        url:'/Servlets/SearchServlet',
         success:function(data){
             var list = eval(data);
             for(var i = 0;i < list.length;i++){
@@ -55,14 +54,15 @@ function InitialObjectColumns(){
             }
         },
         error:function(data){
-            layer.open({
-                title: '提示',
-                content: '获取对象信息错误',
-                icon: 5,
-                skin: 'layui-layer-lan',
-                closeBtn: 0,
-                anim: 2,
-            });
+            alert(data.responseText);
+            // layer.open({
+            //     title: '提示',
+            //     content: '获取对象信息错误',
+            //     icon: 5,
+            //     skin: 'layui-layer-lan',
+            //     closeBtn: 0,
+            //     anim: 2,
+            // });
         }
     });
 }

@@ -7,23 +7,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by 15852 on 2017/4/26.
+ * Created by 15852 on 2017/4/30.
  */
-public class EditObjectServlet extends HttpServlet {
+public class SearchServlet extends HttpServlet{
 
-    public EditObjectServlet() {
+    public SearchServlet() {
         super();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        request.getRequestDispatcher(request.getContextPath() + "/Views/SearchResult.jsp").forward(request,response);
+        this.doPost(request, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
-        request.getRequestDispatcher("/Views/SearchResult.jsp").forward(request,response);
+        request.getRequestDispatcher("Views/SearchResult.jsp").forward(request,response);
     }
 
     public void init() throws ServletException {
