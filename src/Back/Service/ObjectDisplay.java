@@ -1,4 +1,4 @@
-package Service;
+package Back.Service;
 
 import Annotations.Label;
 
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class ObjectDisplay {
 	// 输出基本信息
-	public void displayInfo(ResultSet rs, Class<?> clazz) {
+	public void translateInfo(ResultSet rs, Class<?> clazz) {
 		try {
 			while (rs.next()) {
 				for (Field field : clazz.getDeclaredFields()) {

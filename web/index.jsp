@@ -17,15 +17,12 @@
 <div class="wrapper">
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            Dropdown
+            选择对象
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+        <ul id="objects" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#">Person</a></li>
+            <li><a href="#">Animal</a></li>
         </ul>
     </div>
 
@@ -55,12 +52,16 @@
             <li onclick="EditObject()">修改对象信息</li>
         </ul>
     </div>
+    <form method="post" action="/EditObjectServlet">
+        <button type="submit"></button>
+    </form>
 
     <%@ include file="Views/ViewConponents/_CreateObject.jsp"%>
     <%@ include file="Views/ViewConponents/_EditObject.jsp"%>
 
-    <script src="JS/Index.js"></script>
-    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </div>
+<script src="JS/Index.js"></script>
+<script src="Content/layer/layer.js"></script>
+<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -15,10 +15,6 @@ public class CreateObjectServlet extends HttpServlet {
         super();
     }
 
-    public void destory(){
-        super.destroy();
-    }
-
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
