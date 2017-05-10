@@ -23,7 +23,7 @@ public class EditObjectServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
-        request.getRequestDispatcher("/Views/SearchResult.jsp").forward(request,response);
+        request.getRequestDispatcher(request.getContextPath() + "/Views/SearchResult.jsp").forward(request,response);
     }
 
     public void init() throws ServletException {

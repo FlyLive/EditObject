@@ -11,10 +11,10 @@ import java.io.IOException;
 /**
  * Created by 15852 on 2017/4/27.
  */
-public class DeletObjectServlet extends HttpServlet{
+public class DeleteObjectServlet extends HttpServlet{
     private ObjectService _objectService = new ObjectService();
 
-    public DeletObjectServlet() {
+    public DeleteObjectServlet() {
         super();
     }
 

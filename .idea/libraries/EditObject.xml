@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="EditObject">
+    <CLASSES>
+      <root url="jar://F:/软件下载/Java/dom4j-1.6.1.jar!/" />
+      <root url="jar://F:/软件下载/Java/sqljdbc_6.0/chs/jre8/sqljdbc42.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

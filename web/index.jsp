@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+%>
 <html>
 <head>
     <title>任意对象的增删改查(Web)</title>
@@ -15,17 +17,16 @@
 </head>
 <body>
 <div class="wrapper">
+    <br>
     <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button class="btn btn-default dropdown-toggle" type="button" id="object-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             选择对象
             <span class="caret"></span>
         </button>
-        <ul id="objects" class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li><a href="#">Person</a></li>
-            <li><a href="#">Animal</a></li>
+        <ul id="objects" class="dropdown-menu" aria-labelledby="object-menu">
         </ul>
     </div>
-
+    <br>
     <div class="row">
         <button class="btn btn-primary" type="button" onclick="CreateObject()">新建对象</button>
         <div class="col-lg-6">
@@ -35,33 +36,31 @@
             </div><!-- /input-group -->
         </div><!-- /.col-lg-6 -->
     </div><!-- /.row -->
-    Hello World,Hello TomCat!
-    <button class="btn btn-primary" type="button" onclick="EditObject()">修改对象</button>
-    <ul class="list-group">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Morbi leo risus</li>
-        <li class="list-group-item">Porta ac consectetur ac</li>
-        <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
+    <table class="table table-hover">
+        <caption>
+            <span id="focus-object"></span></caption>
+        <thead>
+        <tr id="object-head"></tr>
+        </thead>
+        <tbody id="object-body"></tbody>
+    </table>
 
     <div class="right-click" id="click-menu">
+        <input id="selected-item" type="hidden">
         <p>编辑对象</p>
         <ul>
-            <li onclick="DeletObject()">删除对象</li>
+            <li onclick="DeleteObject()">删除对象</li>
             <li onclick="EditObject()">修改对象信息</li>
         </ul>
     </div>
-    <form method="post" action="/EditObjectServlet">
-        <button type="submit"></button>
-    </form>
 
     <%@ include file="Views/ViewConponents/_CreateObject.jsp"%>
     <%@ include file="Views/ViewConponents/_EditObject.jsp"%>
 
 </div>
-<script src="JS/Index.js"></script>
 <script src="Content/layer/layer.js"></script>
-<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="JS/layer_open_tip.js"></script>
+<script src="JS/Index.js"></script>
+<script src="JS/bootstrap-3.3.7.min.js"></script>
 </body>
 </html>

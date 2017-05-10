@@ -8,12 +8,16 @@
         <servlet-class>Servlets.InitMenuServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>InitTitleServlet</servlet-name>
+        <servlet-class>Servlets.InitTitleServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>CreateObjectServlet</servlet-name>
         <servlet-class>Servlets.CreateObjectServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>DeletObjectServlet</servlet-name>
-        <servlet-class>Servlets.DeletObjectServlet</servlet-class>
+        <servlet-name>DeleteObjectServlet</servlet-name>
+        <servlet-class>Servlets.DeleteObjectServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>EditObjectServlet</servlet-name>
@@ -29,12 +33,16 @@
         <url-pattern>/Servlets/InitMenuServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>InitTitleServlet</servlet-name>
+        <url-pattern>/Servlets/InitTitleServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>CreateObjectServlet</servlet-name>
         <url-pattern>/Servlets/CreateObjectServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>DeletObjectServlet</servlet-name>
-        <url-pattern>/Servlets/DeletObjectServlet</url-pattern>
+        <servlet-name>DeleteObjectServlet</servlet-name>
+        <url-pattern>/Servlets/DeleteObjectServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EditObjectServlet</servlet-name>

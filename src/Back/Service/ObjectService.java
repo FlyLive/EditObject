@@ -10,23 +10,22 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-
 /**
  * Created by 15852 on 2017/4/27.
  */
 public class ObjectService {
     private DataBaseDAO _db = new DataBaseDAO();
-    private static final String filePath = "";
+    private static final String filePath = "D:\\备份文件\\我的电脑重要文件\\Java\\EditObject\\src\\Back\\Service\\Objects.xml";
     private static final ObjectInput objectInput = new ObjectInput();
     private static final ObjectDisplay objectDisplay = new ObjectDisplay();
 
+    //获取所有对象的名称
     public ArrayList<String> getAllObjectName() {
         ArrayList<String> objectNames = new ArrayList<String>();
 
@@ -37,11 +36,11 @@ public class ObjectService {
             Document doc = sr.read(input);
 
             Element root = doc.getRootElement();
-            List<Element> elements = (List<Element>)root.elements("object");
+            List<Element> elements = (List<Element>) root.elements("object");
 
-            for(int i = 0;i < elements.size();i++){
+            for (int i = 0; i < elements.size(); i++) {
                 String name = elements.get(i).attribute("name").getValue();
-                objectNames.add(name);
+                objectNames.add("'" + name + "'");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -51,23 +50,39 @@ public class ObjectService {
         return objectNames;
     }
 
-    // 显示表所有信息
-    public void showAll(String className) {
-        String sql = "select * from " + className;
-        ResultSet rs = null;
-        rs = _db.executeSelectSQL(sql);
-        if (rs != null) {
-
-
-        } else {
-            System.out.println("暂无信息，请添加!");
+    //获取该对象的信息提示
+    public ArrayList<String> getAnnotations(String objectName){
+        ArrayList<String> tips = new ArrayList<String>();
+        try {
+            tips.addAll(objectDisplay.getAnnotations(Class.forName("ViewModels." + objectName + "Entity")));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
+        return tips;
+    }
+
+    // 显示表所有信息
+    public List<Object> showAll(String objectName) {
+        ArrayList<Object> result = new ArrayList<Object>();
+        try {
+            String sql = "select * from " + objectName;
+            ResultSet rs = null;
+            rs = _db.executeSelectSQL(sql);
+            if (rs != null) {
+                result.addAll(objectDisplay.translateInfo(rs, Class.forName("ViewModels." + objectName + "Entity")));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     // 增加
-    public void create(Class<?> clazz) {
+    public boolean create(Class<?> clazz, String[] inputs) {
         // 输入初始化
-        Object obj = objectInput.createObject(clazz);
+        Object obj = objectInput.createObject(clazz, inputs);
 
         Object[] fieldValues = objectDisplay.getFields(obj, clazz);
 
@@ -76,13 +91,9 @@ public class ObjectService {
 
         // 写入数据库
         int count = _db.executeUpdateSQL(sql, fieldValues);
-        if (count > 0) {
-            System.out.println("添加成功！");
-        } else {
-            System.out.println("添加失败！");
-        }
-    }
 
+        return count > 0 ? true : false;
+    }
 
     // 拼接添加对象SQL语句
     public String CreateObjectSQLString(Class<?> clazz, Object[] fieldValues) {
@@ -100,32 +111,28 @@ public class ObjectService {
     }
 
     // 删除
-    public void delete(Class<?> clazz) {
-        String className = clazz.getSimpleName();
-        Scanner input = new Scanner(System.in);
+    public boolean delete(String objectName, int id) {
+        try {
+            String sql = "delete from " + objectName + " where idNo=?";
+            int count = _db.executeUpdateSQL(sql, id);
 
-        System.out.println("请输入查找对象的号码：");
-        int no = (int) objectInput.getCheckedInput("Integer");
-
-        String sql = "delete from " + className + " where idNo=?";
-        int count = _db.executeUpdateSQL(sql, no);
-
-        if (count > 0) {
-            System.out.println("成功删除号码为 " + no + " 的对象");
-        } else {
-            System.out.println("未找到Id为: " + no + " 的对象");
+            return count > 0 ? true : false;
+        } catch (Exception e) {
+            return false;
         }
     }
 
     // 修改
-    public void update(Class<?> clazz) {
-        String className = clazz.getSimpleName();
+    public boolean update(String objectName, int id, String[] inputs) {
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("ViewModels." + objectName + "Entity");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
         // 修改值列表
-
-        System.out.println("请输入修改对象的ID:");
-        int idNo = (int) objectInput.getCheckedInput("Integer");
-
-        Object obj = objectInput.modifyObject(clazz);
+        Object obj = objectInput.modifyObject(clazz, id, inputs);
 
         String sqlCenter = "";
         Object[] fields = objectDisplay.getFields(obj, clazz);
@@ -135,49 +142,39 @@ public class ObjectService {
         for (Field field : clazz.getDeclaredFields()) {
             sqlCenter += field.getName() + "=?,";
             if (field.getName().equals("idNo")) {
-                fields[index] = idNo;
+                fields[index] = id;
             }
             index++;
         }
 
         sqlCenter = sqlCenter.substring(0, sqlCenter.length() - 1);
 
-        String sql = "update " + className + " set " + sqlCenter
-                + " where idNo=" + idNo;
+        String sql = "update " + objectName + " set " + sqlCenter
+                + " where idNo=" + id;
 
         // 对数据库进行操作
         int count = _db.executeUpdateSQL(sql, fields);
-        if (count > 0) {
-            System.out.println("成功修改ID为: " + idNo + " 的对象");
-        } else {
-            System.out.println("修改失败!");
-        }
+
+        return count > 0 ? true : false;
     }
 
     // 查找
-    public void select(Class<?> clazz) {
-        String className = clazz.getSimpleName();
-        Scanner input = new Scanner(System.in);
+    public ArrayList<Object> search(String objectName, String search) {
+        ArrayList<Object> result = new ArrayList<Object>();
         ResultSet rs = null;
-        String sql = "select * from " + className + " where idNo=?";
+        try {
+            String sql = "select * from " + objectName + " where idNo=?";
 
-        System.out.println("请输入查找对象的号码：");
-        int idNo = (int) objectInput.getCheckedInput("Integer");
+            rs = _db.executeSelectSQL(sql);
 
-        rs = _db.executeSelectSQL(sql, idNo);
-
-        if (rs != null) {
-            //objectDisplay.displayInfo(rs, clazz);
-        }
-    }
-    //删除对象
-    public boolean deletObject(String objectName,int id){
-        try{
-
-        }catch (Exception e){
+            if (rs != null) {
+                result.addAll(objectDisplay.translateInfo(rs, Class.forName("ViewModels." + objectName + "Entity")));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
+        return result;
     }
 }

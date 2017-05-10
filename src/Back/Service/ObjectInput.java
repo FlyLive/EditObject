@@ -9,14 +9,14 @@ import java.util.Scanner;
 
 public class ObjectInput {
 	// 通过映射的类及注解创建对象
-	public Object createObject(Class<?> clazz) {
+	public Object createObject(Class<?> clazz,String[] inputs) {
 		Field[] fields = clazz.getDeclaredFields();
 		Object object = null;
 
 		try {
 			object = clazz.newInstance();
 			for (int i = 0; i < fields.length; i++) {
-				setField(fields[i], clazz, object);
+				setField(fields[i], clazz, object,inputs[i]);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -26,7 +26,7 @@ public class ObjectInput {
 	}
 
 	// 设置属性
-	public void setField(Field field, Class<?> clazz, Object obj)
+	public static void setField(Field field, Class<?> clazz, Object obj,String input)
 			throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException {
 		Method[] methods = clazz.getMethods();
@@ -35,7 +35,7 @@ public class ObjectInput {
 			if (method.getName().equalsIgnoreCase(setMethod)) {
 				getPrompt(field);
 
-				Object args = getCheckedInput(field.getType().getSimpleName());
+				Object args = getCheckedInput(field.getType().getSimpleName(),input);
 
 				method.invoke(obj, args);
 			}
@@ -43,7 +43,7 @@ public class ObjectInput {
 	}
 
 	// 通过映射的类及注解修改对象
-	public Object modifyObject(Class<?> clazz) {
+	public Object modifyObject(Class<?> clazz,int id,String[] inputs) {
 		Field[] fields = clazz.getDeclaredFields();
 		Object obj = null;
 
@@ -51,7 +51,7 @@ public class ObjectInput {
 			obj = clazz.newInstance();
 			for (int i = 0; i < fields.length; i++) {
 				if (!fields[i].getName().equals("idNo")) {
-					setField(fields[i], clazz, obj);
+					setField(fields[i], clazz, obj,inputs[i]);
 				}
 			}
 		} catch (Exception e) {
@@ -62,37 +62,29 @@ public class ObjectInput {
 	}
 
 	// 获取注解的提示
-	public void getPrompt(Field field) {
+	public static String getPrompt(Field field) {
 		Label fieldLabel = field.getAnnotation(Label.class);
-		System.out.println(fieldLabel.value());
+		return fieldLabel.value();
 	}
 
 	// 获取经过校验的输入
-	public Object getCheckedInput(String type) {
-		Scanner sc = new Scanner(System.in);
-		Object input = null;
+	public static Object getCheckedInput(String type,String input) {
+		Object obj = null;
 		try {
 			if(type.equalsIgnoreCase("int")){
-				input = sc.nextInt();
+				obj = Integer.parseInt(input);
 			}else if (type.equalsIgnoreCase("String")) {
-				input = sc.nextLine();
+				obj = input;
 			} else if (type.equalsIgnoreCase("Integer")) {
-				input = Integer.valueOf(sc.nextLine());
+				obj = Integer.valueOf(input);
 			} else if (type.equalsIgnoreCase("Boolean")) {
-				String temp = sc.nextLine();
-				if (!temp.equals("true") && !temp.equals("false")) {
-					System.out.println("类型错误,请重试");
-					input = getCheckedInput(type);
-				} else {
-					input = Boolean.valueOf(temp);
-				}
+				obj = Boolean.valueOf(input);
 			} else if (type.equalsIgnoreCase("double")) {
-				input = Double.valueOf(sc.nextLine());
+				obj = Double.valueOf(input);
 			}
 		} catch (Exception e) {
-			System.out.println("类型错误,请重试");
-			input = getCheckedInput(type);
+			return null;
 		}
-		return input;
+		return obj;
 	}
 }

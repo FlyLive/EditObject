@@ -10,14 +10,18 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by 15852 on 2017/4/30.
+ * Created by 15852 on 2017/5/9.
  */
-public class InitMenuServlet extends HttpServlet{
+public class InitTitleServlet extends HttpServlet{
     private ObjectService _objectService = new ObjectService();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<String> names = _objectService.getAllObjectName();
+        request.setCharacterEncoding("UTF-8");
+
+        String objectName = request.getParameter("objectName").trim();
+        List<String> names = _objectService.getAnnotations(objectName);
+        response.setCharacterEncoding("UTF-8");
         response.getWriter().print(names);
     }
 

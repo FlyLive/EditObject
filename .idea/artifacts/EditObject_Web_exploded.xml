@@ -5,7 +5,10 @@
       <element id="javaee-facet-resources" facet="EditObject/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="javaee-facet-classes" facet="EditObject/web/Web" />
+          <element id="module-output" name="EditObject" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="EditObject" />
         </element>
       </element>
     </root>
