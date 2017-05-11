@@ -22,7 +22,6 @@ import org.dom4j.io.SAXReader;
 public class ObjectService {
     private DataBaseDAO _db = new DataBaseDAO();
     private static final String filePath = "D:\\备份文件\\我的电脑重要文件\\Java\\EditObject\\src\\Back\\Service\\Objects.xml";
-    private static final ObjectInput objectInput = new ObjectInput();
     private static final ObjectDisplay objectDisplay = new ObjectDisplay();
 
     //获取所有对象的名称
@@ -50,15 +49,34 @@ public class ObjectService {
         return objectNames;
     }
 
-    //获取该对象的信息提示
-    public ArrayList<String> getAnnotations(String objectName){
+    //获取类的所有字段
+    public static ArrayList<String> getTips(String objectName){
         ArrayList<String> tips = new ArrayList<String>();
         try {
-            tips.addAll(objectDisplay.getAnnotations(Class.forName("ViewModels." + objectName + "Entity")));
-        } catch (ClassNotFoundException e) {
+            Class<?> clazz = Class.forName("ViewModels." + objectName + "Entity");
+            Field[] fields = clazz.getDeclaredFields();
+            for(Field field : fields){
+                tips.add(field.getName());
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return tips;
+    }
+
+    //获取所有字段注解
+    public static ArrayList<String> getAnnotations(String objectName){
+        ArrayList<String> annotations = new ArrayList<String>();
+        try {
+            Class<?> clazz = Class.forName("ViewModels." + objectName + "Entity");
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                annotations.add(ObjectInput.getPrompt(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return annotations;
     }
 
     // 显示表所有信息
@@ -80,27 +98,35 @@ public class ObjectService {
     }
 
     // 增加
-    public boolean create(Class<?> clazz, String[] inputs) {
-        // 输入初始化
-        Object obj = objectInput.createObject(clazz, inputs);
+    public boolean create(String objectName, Object[] inputs,Object[] options) {
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("ViewModels." + objectName + "Entity");
+            // 拼接创建Object的SQL语言
+            String sql = CreateObjectSQLString(objectName,options);
 
-        Object[] fieldValues = objectDisplay.getFields(obj, clazz);
+            // 写入数据库
+            int count = _db.executeUpdateSQL(sql, inputs);
 
-        // 拼接为SQL语言
-        String sql = CreateObjectSQLString(clazz, fieldValues);
-
-        // 写入数据库
-        int count = _db.executeUpdateSQL(sql, fieldValues);
-
-        return count > 0 ? true : false;
+            return count > 0 ? true : false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     // 拼接添加对象SQL语句
-    public String CreateObjectSQLString(Class<?> clazz, Object[] fieldValues) {
-        String className = clazz.getSimpleName();
-        String sql = "insert into " + className + " values(";
+    public String CreateObjectSQLString(String objName,Object[] options) {
+        String sql = "insert into " + objName + "(";
 
-        for (int i = 0; i < clazz.getDeclaredFields().length; i++) {
+        for (int i = 0; i < options.length; i++) {
+            sql += options[i].toString() + ",";
+        }
+
+        sql = sql.substring(0, sql.length() - 1);
+        sql += ") values(";
+
+        for (int i = 0; i < options.length; i++) {
             sql += "?,";
         }
 
@@ -111,7 +137,7 @@ public class ObjectService {
     }
 
     // 删除
-    public boolean delete(String objectName, int id) {
+    public boolean deleteObject(String objectName, int id) {
         try {
             String sql = "delete from " + objectName + " where idNo=?";
             int count = _db.executeUpdateSQL(sql, id);
@@ -123,7 +149,8 @@ public class ObjectService {
     }
 
     // 修改
-    public boolean update(String objectName, int id, String[] inputs) {
+    public boolean update(String objectName,Object[] inputs,Object[] options) {
+        int id = 0;
         Class<?> clazz = null;
         try {
             clazz = Class.forName("ViewModels." + objectName + "Entity");
@@ -132,19 +159,15 @@ public class ObjectService {
             return false;
         }
         // 修改值列表
-        Object obj = objectInput.modifyObject(clazz, id, inputs);
 
         String sqlCenter = "";
-        Object[] fields = objectDisplay.getFields(obj, clazz);
 
         // 拼接更新部分SQL语句
-        int index = 0;
-        for (Field field : clazz.getDeclaredFields()) {
-            sqlCenter += field.getName() + "=?,";
-            if (field.getName().equals("idNo")) {
-                fields[index] = id;
+        for (int i = 0;i < options.length;i++) {
+            sqlCenter += options[i].toString() + "=?,";
+            if (options[i].toString().equals("idNo")) {
+                id = Integer.parseInt(inputs[i].toString());
             }
-            index++;
         }
 
         sqlCenter = sqlCenter.substring(0, sqlCenter.length() - 1);
@@ -153,9 +176,30 @@ public class ObjectService {
                 + " where idNo=" + id;
 
         // 对数据库进行操作
-        int count = _db.executeUpdateSQL(sql, fields);
+        int count = _db.executeUpdateSQL(sql, inputs);
 
         return count > 0 ? true : false;
+    }
+
+    // 根据ID查找
+    public Object searchById(String objectName, int id) {
+        Object result = new Object();
+        ResultSet rs = null;
+        try {
+            Class<?> clazz = Class.forName("ViewModels." + objectName + "Entity");
+            String sql = "select * from " + objectName + " where idNo=?";
+
+            rs = _db.executeSelectSQL(sql,id);
+
+            if (rs != null) {
+                result = objectDisplay.translateInfo(rs, clazz).get(0);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     // 查找

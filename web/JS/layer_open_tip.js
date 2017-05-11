@@ -22,6 +22,7 @@ function OpenTipSuccess(content, anim) {
         title: "提示",
         content: content,
         skin: "layui-layer-molv",
+        icon:6,
         time: 2000,
         anim: anim,
     });

@@ -29,6 +29,7 @@
     <br>
     <div class="row">
         <button class="btn btn-primary" type="button" onclick="CreateObject()">新建对象</button>
+        <h4 class="selected-object">(<span id="focus-object"></span>)</h4>
         <div class="col-lg-6">
             <div class="input-group">
                 <input id="search" type="text" class="form-control" placeholder="搜索...">
@@ -36,9 +37,10 @@
             </div><!-- /input-group -->
         </div><!-- /.col-lg-6 -->
     </div><!-- /.row -->
+    <br>
+
     <table class="table table-hover">
-        <caption>
-            <span id="focus-object"></span></caption>
+        <caption></caption>
         <thead>
         <tr id="object-head"></tr>
         </thead>
@@ -54,13 +56,17 @@
         </ul>
     </div>
 
-    <%@ include file="Views/ViewConponents/_CreateObject.jsp"%>
-    <%@ include file="Views/ViewConponents/_EditObject.jsp"%>
+    <div class="modal fade" id="objectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
 
 </div>
+<script src="JS/bootstrap-3.3.7.min.js"></script>
 <script src="Content/layer/layer.js"></script>
 <script src="JS/layer_open_tip.js"></script>
 <script src="JS/Index.js"></script>
-<script src="JS/bootstrap-3.3.7.min.js"></script>
 </body>
 </html>

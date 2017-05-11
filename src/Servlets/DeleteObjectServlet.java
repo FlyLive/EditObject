@@ -20,14 +20,16 @@ public class DeleteObjectServlet extends HttpServlet{
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        this.doPost(request, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
+        request.setCharacterEncoding("UTF-8");
+        String objectName = request.getParameter("objectName");
+        int id = Integer.parseInt(request.getParameter("id"));
+        boolean result = _objectService.deleteObject(objectName,id);
 
-        //boolean result = _objectService.deletObject(className,id);
+        response.getWriter().print(result);
     }
 
     public void init() throws ServletException {

@@ -18,7 +18,7 @@
         Class<?> clazz = object.getClass();
         Object[] fields = ObjectDisplay.getFields(object,clazz);
 %>
-<tr class="object-item" id="<%fields[0].toString();%>">
+<tr class="object-item" id="<%=fields[0].toString()%>">
     <% for (Object field : fields) {
     %>
         <td><%=field == null ? "未设置" : field.toString()%></td>
