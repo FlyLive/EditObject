@@ -33,8 +33,6 @@ public class ObjectInput {
 		String setMethod = "set" + field.getName();
 		for (Method method : methods) {
 			if (method.getName().equalsIgnoreCase(setMethod)) {
-				getPrompt(field);
-
 				Object args = getCheckedInput(field.getType().getSimpleName(),input);
 
 				method.invoke(obj, args);
@@ -78,7 +76,7 @@ public class ObjectInput {
 			} else if (type.equalsIgnoreCase("Integer")) {
 				obj = Integer.valueOf(input);
 			} else if (type.equalsIgnoreCase("Boolean")) {
-				obj = Boolean.valueOf(input);
+				obj = input.equalsIgnoreCase("1") ? true : false;
 			} else if (type.equalsIgnoreCase("double")) {
 				obj = Double.valueOf(input);
 			}

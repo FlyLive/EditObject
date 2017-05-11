@@ -16,7 +16,7 @@ public class PersonEntity {
 	private Integer age;
 
 	@Label("是否已婚")
-	private Boolean isMerried;
+	private boolean isMerried;
 
 	public String getName() {
 		return name;

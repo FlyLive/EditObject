@@ -1,9 +1,6 @@
 package Back.Service;
 
-import Annotations.Label;
-
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,17 +15,12 @@ public class ObjectDisplay {
                 Object obj = clazz.newInstance();
                 for (Field field : clazz.getDeclaredFields()) {
                     String fieldName = field.getName();
-                    ObjectInput.setField(field,clazz,obj,rs.getString(fieldName));
+                    String fieldValue = rs.getString(fieldName);
+                    ObjectInput.setField(field, clazz, obj, fieldValue);
                 }
                 result.add(obj);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
@@ -41,7 +33,7 @@ public class ObjectDisplay {
         return result;
     }
 
-    public ArrayList<String> getAnnotations(Class<?> clazz){
+    public ArrayList<String> getAnnotations(Class<?> clazz) {
 
         ArrayList<String> annotations = new ArrayList<String>();
         Field[] fields = clazz.getDeclaredFields();
@@ -49,6 +41,38 @@ public class ObjectDisplay {
             annotations.add("'" + ObjectInput.getPrompt(field) + "'");
         }
         return annotations;
+    }
+
+    public ArrayList<Object> searchAll(ResultSet rs, Class<?> clazz,String search) {
+        ArrayList<Object> result = new ArrayList<Object>();
+        try {
+            while (rs.next()) {
+                Object obj = clazz.newInstance();
+                int index = -1;
+                for (Field field : clazz.getDeclaredFields()) {
+                    String fieldName = field.getName();
+                    String fieldValue = rs.getString(fieldName);
+                    ObjectInput.setField(field, clazz, obj, fieldValue);
+
+                    if (fieldValue.contains(search)) {
+                        index++;
+                    }
+                }
+                if (index >= 0) {
+                    result.add(obj);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     // 获取所有属性
@@ -69,7 +93,6 @@ public class ObjectDisplay {
                 }
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return values;

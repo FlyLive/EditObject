@@ -50,12 +50,12 @@ public class ObjectService {
     }
 
     //获取类的所有字段
-    public static ArrayList<String> getTips(String objectName){
+    public static ArrayList<String> getTips(String objectName) {
         ArrayList<String> tips = new ArrayList<String>();
         try {
             Class<?> clazz = Class.forName("ViewModels." + objectName + "Entity");
             Field[] fields = clazz.getDeclaredFields();
-            for(Field field : fields){
+            for (Field field : fields) {
                 tips.add(field.getName());
             }
         } catch (Exception e) {
@@ -65,7 +65,19 @@ public class ObjectService {
     }
 
     //获取所有字段注解
-    public static ArrayList<String> getAnnotations(String objectName){
+    public ArrayList<String> getTitle(String objectName) {
+        ArrayList<String> titles = new ArrayList<String>();
+        try {
+            Class<?> clazz = Class.forName("ViewModels." + objectName + "Entity");
+            titles.addAll(objectDisplay.getAnnotations(clazz));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return titles;
+    }
+
+    //获取所有字段注解
+    public static ArrayList<String> getAnnotations(String objectName) {
         ArrayList<String> annotations = new ArrayList<String>();
         try {
             Class<?> clazz = Class.forName("ViewModels." + objectName + "Entity");
@@ -98,12 +110,12 @@ public class ObjectService {
     }
 
     // 增加
-    public boolean create(String objectName, Object[] inputs,Object[] options) {
+    public boolean create(String objectName, Object[] inputs, Object[] options) {
         Class<?> clazz = null;
         try {
             clazz = Class.forName("ViewModels." + objectName + "Entity");
             // 拼接创建Object的SQL语言
-            String sql = CreateObjectSQLString(objectName,options);
+            String sql = CreateObjectSQLString(objectName, options);
 
             // 写入数据库
             int count = _db.executeUpdateSQL(sql, inputs);
@@ -116,7 +128,7 @@ public class ObjectService {
     }
 
     // 拼接添加对象SQL语句
-    public String CreateObjectSQLString(String objName,Object[] options) {
+    public String CreateObjectSQLString(String objName, Object[] options) {
         String sql = "insert into " + objName + "(";
 
         for (int i = 0; i < options.length; i++) {
@@ -149,7 +161,7 @@ public class ObjectService {
     }
 
     // 修改
-    public boolean update(String objectName,Object[] inputs,Object[] options) {
+    public boolean update(String objectName, Object[] inputs, Object[] options) {
         int id = 0;
         Class<?> clazz = null;
         try {
@@ -163,7 +175,7 @@ public class ObjectService {
         String sqlCenter = "";
 
         // 拼接更新部分SQL语句
-        for (int i = 0;i < options.length;i++) {
+        for (int i = 0; i < options.length; i++) {
             sqlCenter += options[i].toString() + "=?,";
             if (options[i].toString().equals("idNo")) {
                 id = Integer.parseInt(inputs[i].toString());
@@ -189,7 +201,7 @@ public class ObjectService {
             Class<?> clazz = Class.forName("ViewModels." + objectName + "Entity");
             String sql = "select * from " + objectName + " where idNo=?";
 
-            rs = _db.executeSelectSQL(sql,id);
+            rs = _db.executeSelectSQL(sql, id);
 
             if (rs != null) {
                 result = objectDisplay.translateInfo(rs, clazz).get(0);
@@ -205,17 +217,15 @@ public class ObjectService {
     // 查找
     public ArrayList<Object> search(String objectName, String search) {
         ArrayList<Object> result = new ArrayList<Object>();
+        Class<?> clazz = null;
         ResultSet rs = null;
         try {
-            String sql = "select * from " + objectName + " where idNo=?";
+            clazz = Class.forName("ViewModels." + objectName + "Entity");
+            String sql = "select * from " + objectName;
 
             rs = _db.executeSelectSQL(sql);
 
-            if (rs != null) {
-                result.addAll(objectDisplay.translateInfo(rs, Class.forName("ViewModels." + objectName + "Entity")));
-            } else {
-                return null;
-            }
+            result.addAll(objectDisplay.searchAll(rs, clazz, search));
         } catch (Exception e) {
             e.printStackTrace();
         }

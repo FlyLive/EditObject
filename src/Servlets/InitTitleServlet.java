@@ -20,7 +20,7 @@ public class InitTitleServlet extends HttpServlet{
         request.setCharacterEncoding("UTF-8");
 
         String objectName = request.getParameter("objectName").trim();
-        List<String> names = _objectService.getAnnotations(objectName);
+        List<String> names = _objectService.getTitle(objectName);
         response.setCharacterEncoding("UTF-8");
         response.getWriter().print(names);
     }
