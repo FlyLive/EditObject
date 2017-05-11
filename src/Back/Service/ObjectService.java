@@ -64,7 +64,7 @@ public class ObjectService {
         return tips;
     }
 
-    //获取所有字段注解
+    //获取所有字段注解名
     public ArrayList<String> getTitle(String objectName) {
         ArrayList<String> titles = new ArrayList<String>();
         try {
