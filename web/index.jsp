@@ -22,7 +22,7 @@
         <button class="btn btn-default dropdown-toggle" type="button" id="object-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             选择对象
             <span class="caret"></span>
-        </button>
+        </button>&emsp;(<span>右键编辑对象</span>)
         <ul id="objects" class="dropdown-menu" aria-labelledby="object-menu">
         </ul>
     </div>
